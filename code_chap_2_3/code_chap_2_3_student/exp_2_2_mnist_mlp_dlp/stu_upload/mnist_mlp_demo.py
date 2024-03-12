@@ -35,15 +35,57 @@ class MNIST_MLP(object):
         weight_shapem1[1]=1
         weight_shapem1[2]=input_size
         weight_shapem1[3]=hidden1
-
         output_shapem1=pycnnl.IntVector(4)  
         output_shapem1[0]=batch_size
         output_shapem1[1]=1
         output_shapem1[2]=1
         output_shapem1[3]=hidden1
-    
         self.net.createMlpLayer('fc1', input_shapem1, weight_shapem1, output_shapem1)
-        __________________ 
+        # relu
+        self.net.createReLuLayer('relu1')
+
+        input_shapem2=pycnnl.IntVector(4)  
+        input_shapem2[0]=batch_size
+        input_shapem2[1]=1
+        input_shapem2[2]=1
+        input_shapem2[3]=hidden1
+        weight_shapem2=pycnnl.IntVector(4)  
+        weight_shapem2[0]=batch_size
+        weight_shapem2[1]=1
+        weight_shapem2[2]=hidden1
+        weight_shapem2[3]=hidden2
+        output_shapem2=pycnnl.IntVector(4)  
+        output_shapem2[0]=batch_size
+        output_shapem2[1]=1
+        output_shapem2[2]=1
+        output_shapem2[3]=hidden2
+        # fc2
+        self.net.createMlpLayer('fc2', input_shapem2, weight_shapem2, output_shapem2)
+        # relu
+        self.net.createReLuLayer('relu2')
+
+        input_shapem3=pycnnl.IntVector(4)  
+        input_shapem3[0]=batch_size
+        input_shapem3[1]=1
+        input_shapem3[2]=1
+        input_shapem3[3]=hidden2
+        weight_shapem3=pycnnl.IntVector(4)  
+        weight_shapem3[0]=batch_size
+        weight_shapem3[1]=1
+        weight_shapem3[2]=hidden2
+        weight_shapem3[3]=out_classes
+        output_shapem3=pycnnl.IntVector(4)  
+        output_shapem3[0]=batch_size
+        output_shapem3[1]=1
+        output_shapem3[2]=1
+        output_shapem3[3]=out_classes
+        # fc3
+        self.net.createMlpLayer('fc3', input_shapem3, weight_shapem3, output_shapem3)
+        # relu
+        self.net.createReLuLayer('relu2')
+
+        # softmax
+        self.net.createSoftmaxLayer('sf', axis=1)
 
     
     def load_mnist(self, file_dir, is_images = 'True'):
@@ -69,8 +111,8 @@ class MNIST_MLP(object):
     
     def load_data(self, data_path, label_path):
         print('Loading MNIST data from files...')
-        test_images = ________________________
-        test_labels = ________________________
+        test_images = self.load_mnist(data_path, True)
+        test_labels = self.load_mnist(label_path, False)
         self.test_data = np.append(test_images, test_labels, axis=1)
 
     def load_model(self, param_dir):   # 加载参数
@@ -78,17 +120,19 @@ class MNIST_MLP(object):
         print('Loading parameters from file ' + param_dir)
         
         params = np.load(param_dir,allow_pickle=True,encoding="latin1").item()
+
         weigh1 = params['w1'].flatten().astype(np.float64)
         bias1 = params['b1'].flatten().astype(np.float64)
         self.net.loadParams(0, weigh1, bias1)
         
         weigh2 = params['w2'].flatten().astype(np.float64)
         bias2 = params['b2'].flatten().astype(np.float64)
-        ____________________
+        self.net.loadParams(2, weigh2, bias2)
 
         weigh3 = params['w3'].flatten().astype(np.float64)
         bias3 = params['b3'].flatten().astype(np.float64)
-        ____________________
+        self.net.loadParams(4, weigh3, bias3)
+
 
            
     def forward(self):
