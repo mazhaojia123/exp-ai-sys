@@ -1,0 +1,16 @@
+-------- TEST CPU --------
+Loading MNIST data from files...
+Load images from ../mnist_data/train-images-idx3-ubyte, number: 60000, data shape: (60000, 784)
+Load images from ../mnist_data/train-labels-idx1-ubyte, number: 60000, data shape: (60000, 1)
+Load images from ../mnist_data/t10k-images-idx3-ubyte, number: 10000, data shape: (10000, 784)
+Load images from ../mnist_data/t10k-labels-idx1-ubyte, number: 10000, data shape: (10000, 1)
+Building multi-layer perception model...
+	Fully connected layer with input 784, output 32.
+	 Relu layer
+	Fully connected layer with input 32, output 16.
+	 Relu layer
+	Fully connected layer with input 16, output 10.
+	 Relu layer
+	Softmax loss layer.
+Initializing parameters of each layer in MLP...
+Loading parameters from file stu_upload/weight.npy
