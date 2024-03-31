@@ -84,8 +84,12 @@ class MNIST_MLP(object):
         # relu
         self.net.createReLuLayer('relu2')
 
+        input_shapem4=pycnnl.IntVector(3)  
+        input_shapem4[0]=batch_size
+        input_shapem4[1]=1
+        input_shapem4[2]=out_classes
         # softmax
-        self.net.createSoftmaxLayer('sf', axis=1)
+        self.net.createSoftmaxLayer('sf', input_shape=input_shapem4, axis=1)
 
     
     def load_mnist(self, file_dir, is_images = 'True'):
@@ -120,6 +124,7 @@ class MNIST_MLP(object):
         print('Loading parameters from file ' + param_dir)
         
         params = np.load(param_dir,allow_pickle=True,encoding="latin1").item()
+        # params = np.load(param_dir,allow_pickle=True).item()
 
         weigh1 = params['w1'].flatten().astype(np.float64)
         bias1 = params['b1'].flatten().astype(np.float64)
