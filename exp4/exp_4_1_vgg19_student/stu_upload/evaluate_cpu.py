@@ -31,29 +31,29 @@ def vgg19():
     for i, layer_name in enumerate(layers):
         if layer_name.startswith('conv'):
             # TODO: 在时序容器中传入卷积运算
-            layer_container.append(nn.Conv2d(in_channels, cfgs[i], kernel_size=(3, 3), padding=(1, 1)))
+            layer_container.add_module(layer_name, nn.Conv2d(in_channels, cfgs[i], kernel_size=(3, 3), padding=(1, 1)))
             in_channels = cfgs[i]
         elif layer_name.startswith('relu'):
             # TODO: 在时序容器中执行ReLU计算
-            layer_container.append(nn.ReLU())
+            layer_container.add_module(layer_name, nn.ReLU())
         elif layer_name.startswith('pool'):
             # TODO: 在时序容器中执行maxpool计算
-            layer_container.append(nn.MaxPool2d(kernel_size=2, stride=2))
+            layer_container.add_module(layer_name, nn.MaxPool2d(kernel_size=2, stride=2))
         elif layer_name == 'flatten':
             # TODO: 在时序容器中执行flatten计算 
-            layer_container.append(nn.Flatten())
+            layer_container.add_module(layer_name, nn.Flatten())
         elif layer_name == 'fc6':
             # TODO: 在时序容器中执行全连接层计算
-            layer_container.append(nn.Linear(512*7*7, 4096))
+            layer_container.add_module(layer_name, nn.Linear(512*7*7, 4096))
         elif layer_name == 'fc7':
             # TODO: 在时序容器中执行全连接层计算
-            layer_container.append(nn.Linear(4096, 4096))
+            layer_container.add_module(layer_name, nn.Linear(4096, 4096))
         elif layer_name == 'fc8':
             # TODO: 在时序容器中执行全连接层计算
-            layer_container.append(nn.Linear(4096, num_classes))
+            layer_container.add_module(layer_name, nn.Linear(4096, num_classes))
         elif layer_name == 'softmax':
             # TODO: 在时序容器中执行Softmax计算
-            layer_container.append(nn.Softmax(dim=1))
+            layer_container.add_module(layer_name, nn.Softmax(dim=1))
     return layer_container
 
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     input_image = load_image(IMAGE_PATH)
     #TODO: 生成VGG19网络模型并保存在net中
     net = vgg19()
-    print(net)
+    # print(net)
     #TODO: 加载网络参数到net中
     net.load_state_dict(torch.load(VGG_PATH))
     #TODO: 模型进入推理模式
