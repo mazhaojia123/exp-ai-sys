@@ -43,16 +43,12 @@ class VGG19(nn.Module):
     def __init__(self):
         super(VGG19, self).__init__()
         #TODO: 调用vgg19网络
-        a = vgg19(pretrained=True)
+        a = vgg19(True)
         a = a.features
-        #TODO: 定义self.layer1为第2层卷积后对应的特征
-        self.layer1 = nn.Sequential(*list(a.children())[:2])
-        #TODO: 定义self.layer2为第4层卷积后对应的特征
-        self.layer2 = nn.Sequential(*list(a.children())[2:7])
-        #TODO: 定义self.layer3为第8层卷积后对应的特征
-        self.layer3 = nn.Sequential(*list(a.children())[7:12])
-        #TODO: 定义self.layer4为第12层卷积后对应的特征
-        self.layer4 = nn.Sequential(*list(a.children())[12:21])
+        self.layer1 = a[:4]
+        self.layer2 = a[4:9]
+        self.layer3 = a[9:18]
+        self.layer4 = a[18:27]
 
     def forward(self, input_):
         out1 = self.layer1(input_)
@@ -201,7 +197,7 @@ if __name__ == '__main__':
     s4 = get_gram_matrix(s4).detach()
     j = 0
     count = 0
-    epochs = 2
+    epochs = 0
     while j <= epochs:
         for i, image in enumerate(data_loader):
             image_c = image.cpu()
